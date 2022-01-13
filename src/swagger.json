@@ -1,0 +1,151 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "JWT Authentication",
+    "description": "Simple API to generate, refresh and verify access token",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:4000/jwt"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Generate",
+      "description": "api which is used for generating jwt token"
+    },
+    {
+      "name": "Verify",
+      "description": "api to validate the jwt access token"
+    }
+  ],
+  "paths": {
+    "/generateaccesstoken": {
+      "post": {
+        "tags": [
+          "Generate"
+        ],
+        "summary": "This will generate jwt token valid for half hour",
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "default": "imkumawatmanoj@gmail.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "generation success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "default": "Token Generation Success"
+                    },
+                    "data": {
+                      "type": "string",
+                      "default": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ijg1MiIsImlhdCI6MTY0MTY0MzY0NiwiZXhwIjoxNjQxNjQ1NDQ2fQ.Hs6cOPWuXeqP77MSvHZN7wctlVdu_zeAsiRL6L5dM7I"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "email not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "default": "email not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/verifyaccesstoken": {
+      "post": {
+        "tags": [
+          "Verify"
+        ],
+        "summary": "This will verify the authorization token",
+        "security": [
+          {
+            "Jwt": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "generation success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "default": "jwt is valid"
+                    },
+                    "data": {
+                      "type": "string",
+                      "default": "imkumawatmanoj@gmail.com"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "token not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "default": "Authorization header is missing"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "Jwt": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header"
+      }
+    }
+  }
+}
