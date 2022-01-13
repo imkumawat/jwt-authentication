@@ -36,7 +36,8 @@ function generateAccessToken(req, res) {
 
         const { email } = req.body
         const tokenSecret = "1234567890"
-
+        const refreshSecret = "0987654321"
+        var token;
         jwt.sign({ email }, tokenSecret, { expiresIn: '1800s' }, (err, data) => {
             if (err) {
                 console.log('Unable to generate jwt access token')
@@ -44,8 +45,19 @@ function generateAccessToken(req, res) {
             }
             else {
                 console.log('JWT access token generation successful')
+                token = data
 
-                return res.status(201).json({ message: 'token generation success', jwt: `${data}` })
+            }
+        })
+        jwt.sign({ email }, refreshSecret, { expiresIn: '7200s' }, (err, data) => {
+            if (err) {
+                console.log('Unable to generate refresh access token')
+                return res.status(500).json({ message: 'Internal Server Error' })
+            }
+            else {
+                console.log('Refresh access token generation successful')
+
+                return res.status(201).json({ message: 'token generation success', jwt: `${token}`, refresh: `${data}` })
             }
         })
     }
